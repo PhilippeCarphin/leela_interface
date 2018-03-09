@@ -2,16 +2,24 @@
 import subprocess
 import time
 
-p = subprocess.Popen(['./bin/leela_0110_linux_x64'], stdout=subprocess.PIPE,
-        stdin=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=69, universal_newlines=True)
+class LeelaInterface(object):
+    def __init__(self):
+        self._leela = subprocess.Popen(['./bin/leela_0110_linux_x64', '-g'], stdout=subprocess.PIPE,
+        stdin=subprocess.PIPE, bufsize=1, universal_newlines=True)
+
+    def ask(self, cmd):
+        self._leela.stdin.write(cmd + '\n')
+        answer = self._leela.stdout.readline()
+        #Have to read an extra line to consume an empty line
+        self._leela.stdout.readline()
+
+        return answer
+
+
+leels = LeelaInterface()
 
 while True:
     cmd = input("command for leela > ")
-    p.stdin.write(cmd + '\n')
-    leela_answer = p.stdout.readline()
-
-    #Have to read an extra line to consume an empty line
-    garbage = p.stdout.readline()
-
+    leela_answer = leels.ask(cmd)
     print("leela_answer = " + leela_answer)
 
