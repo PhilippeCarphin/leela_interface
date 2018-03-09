@@ -5,20 +5,13 @@ import time
 p = subprocess.Popen(['./bin/leela_0110_linux_x64'], stdout=subprocess.PIPE,
         stdin=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=69, universal_newlines=True)
 
-p.stdin.write('play white g4\n')
-p.stdin.write('genmove white\n')
-p.stdin.write('genmove black\n')
-p.stdin.write('genmove white\n')
-p.stdin.write('genmove white\n')
-out1 = p.stdout.readline()
-print("out1 = " + out1)
-p.stdin.write('genmove black\n')
+while True:
+    cmd = input("command for leela > ")
+    p.stdin.write(cmd + '\n')
+    leela_answer = p.stdout.readline()
 
+    #Have to read an extra line to consume an empty line
+    garbage = p.stdout.readline()
 
-out2 = p.stdout.readline()
-out3 = p.stderr.readline()
+    print("leela_answer = " + leela_answer)
 
-
-
-print("out2 = " + out2)
-print("out3 = " + out3)
