@@ -1,11 +1,22 @@
-from subprocess import Popen, PIPE
+from multiprocessing import Process
+import os
 
-engine = Popen(['./bin/leela_0110_linux_x64', '-g'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+def f(name):
+    os.execvp('sh', ['$0-here', './script.sh'])
 
-stdout, stderr = engine.communicate(b'play black C4')
-stdout, stderr = engine.communicate(b'play white C5')
+def g(name):
+    os.execvp('./bin/leela_0110_linux_x64', ['./script.sh hello ' + name])
 
-print(stdout)
-print(stderr)
-engine.wait()
+if __name__ == '__main__':
+
+    q = Process(target=f, args=('bob',))
+    p = Process(target=g, args=('patate',))
+
+    q.start()
+
+    q.join()
+
+    p.start()
+
+    p.join()
 
