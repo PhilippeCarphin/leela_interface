@@ -1,10 +1,11 @@
 #!/bin/python3
 import subprocess
-import threading
 from queue import Queue
+from pipelistener import PipeListener
 import time
 
 leela_binary = './bin/leela_0110_linux_x64'
+
 
 '''
 Interface LeelaInterface:  une instance de LeelaInterface encapsule
@@ -32,19 +33,6 @@ sont mises dans stderr_queue.
 Le main thread peut donc "vider stderr" de façon non-bloquante.
 '''
 
-
-class PipeListenerThread(threading.Thread):
-    def __init__(self, input_pipe, output_queue):
-        threading.Thread.__init__(self)
-        self.input_pipe = input_pipe
-        self.output_queue = output_queue
-
-    def run(self):
-        while True:
-            line = self.input_pipe.readline()
-            self.output_queue.put(line)
-
-
 class LeelaInterface(object):
     def __init__(self):
         print("===Python : LeelaInterface : Starting leela ===")
@@ -57,31 +45,32 @@ class LeelaInterface(object):
                 universal_newlines=True
             )
         self.stderr_queue = Queue()
-        self._stderrListener = PipeListenerThread(
+        self._stderr_listener = PipeListener(
                 input_pipe=self._leela.stderr,
                 output_queue=self.stderr_queue
             )
-        self._stderrListener.start()
+        self._stderr_listener.start()
         print(self.stderr_queue.get().strip())
         print(self.stderr_queue.get().strip())
 
     def get_stderr(self):
-        stderr = ''
+        return self._stderr_listener.get_content()
+    def get_stdout(self):
+        stdout = ''
+        stdout += self._leela.stdout.readline()
+        self._leela.stdout.readline()
+        return stdout
+
+    def ask(self, cmd):
+        self._leela.stdin.write(cmd + '\n')
+
+        answer = self.get_stdout()
+
         # Sometimes I do showboard and leela outputs two lines faster then it
         # outputs the board.  So the function ask finishes before anything has
         # time to make it into the queue.  The output of showboard will be seen
         # after the next command.  That is why there is a .1 second delay here.
         time.sleep(0.1)
-        while not self.stderr_queue.empty():
-            stderr += self.stderr_queue.get()
-        return stderr
-
-    def ask(self, cmd):
-        self.stderr = ''
-        self._leela.stdin.write(cmd + '\n')
-        answer = self._leela.stdout.readline()
-        self._leela.stdout.readline()
-
         return answer, self.get_stderr()
 
 
