@@ -6,7 +6,6 @@ import time
 
 leela_binary = './bin/leela_0110_linux_x64'
 
-
 '''
 Interface LeelaInterface:  une instance de LeelaInterface encapsule
 une instance réelle du programme de go Leela avec des pipe Unix pour
@@ -75,6 +74,11 @@ class LeelaInterface(object):
 
 
 if __name__ == "__main__":
+
+    opencl = input("use opencl ? [y/n] ")
+    if opencl == 'y':
+        leela_binary += '_opencl'
+
 
     leels = LeelaInterface()
     while True:
