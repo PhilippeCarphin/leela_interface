@@ -1,22 +1,13 @@
-from multiprocessing import Process
-import os
+from multiprocessing import Process, Pipe
 
-def f(name):
-    os.execvp('sh', ['$0-here', './script.sh'])
-
-def g(name):
-    os.execvp('./bin/leela_0110_linux_x64', ['./script.sh hello ' + name])
+def f(conn):
+    conn.send([42, None, 'hello'])
+    conn.close()
 
 if __name__ == '__main__':
-
-    q = Process(target=f, args=('bob',))
-    p = Process(target=g, args=('patate',))
-
-    q.start()
-
-    q.join()
-
+    parent_conn, child_conn = Pipe()
+    p = Process(target=f, args=(child_conn,))
     p.start()
-
+    print(parent_conn.recv())  # prints "[42, None, 'hello']"
     p.join()
 
