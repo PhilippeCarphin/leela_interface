@@ -1,10 +1,12 @@
 #!/bin/python3
 import subprocess
 from queue import Queue
-from pipelistener import PipeListener
 import time
+import os
 
-leela_binary = './bin/leela_0110_linux_x64'
+from .pipelistener import PipeListener
+
+leela_binary = os.path.join(os.getcwd(),'src', 'leelainterface', 'bin', 'leela_0110_linux_x64')
 
 '''
 Interface LeelaInterface:  une instance de LeelaInterface encapsule
@@ -33,10 +35,10 @@ Le main thread peut donc "vider stderr" de façon non-bloquante.
 '''
 
 class LeelaInterface(object):
-    def __init__(self):
+    def __init__(self, leela_path=leela_binary):
         print("===Python : LeelaInterface : Starting leela ===")
         self._leela = subprocess.Popen(
-                [leela_binary, '-g'],
+                [leela_path, '-g'],
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 stderr=subprocess.PIPE,
