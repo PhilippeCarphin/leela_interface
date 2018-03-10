@@ -6,7 +6,7 @@ import os
 
 from .pipelistener import PipeListener
 
-leela_binary = os.path.join(os.getcwd(),'src', 'leelainterface', 'bin', 'leela_0110_linux_x64')
+leela_binary = os.path.join(os.getcwd(),'bin', 'leela_0110_linux_x64')
 
 '''
 Interface LeelaInterface:  une instance de LeelaInterface encapsule
@@ -74,21 +74,4 @@ class LeelaInterface(object):
         time.sleep(0.1)
         return answer, self.get_stderr()
 
-
-if __name__ == "__main__":
-
-    opencl = input("use opencl ? [y/n] ")
-    if opencl == 'y':
-        leela_binary += '_opencl'
-
-
-    leels = LeelaInterface()
-    while True:
-        cmd = input("command for leela > ")
-        if cmd == 'quit':
-            print('to quit just press CTRL-C a bunch of times')
-            continue
-        leela_answer, leela_stderr = leels.ask(cmd)
-        print("LeelaInterface : leela_answer : " + leela_answer)
-        print("LeelaInterface : leela_stderr : " + leela_stderr)
 
