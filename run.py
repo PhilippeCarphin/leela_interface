@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3
 from src.leela import LeelaInterface
 
 
