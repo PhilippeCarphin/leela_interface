@@ -6,9 +6,11 @@ import os
 
 from .pipelistener import PipeListener
 
-leela_binary = os.path.join(os.getcwd(),'bin', 'leela_0110_linux_x64')
+leela_cmd = [os.path.join(os.getcwd(),'bin', 'leela_0110_linux_x64'), '-g']
 
-gnugo = ['gnugo', '--mode', 'gtp']
+gnugo_cmd = ['gnugo', '--mode', 'gtp']
+
+leelaz_cmd = ['leelaz', '-g', '-w', './src/leelaz-model-5309030-128000.txt']
 
 '''
 Interface LeelaInterface:  une instance de LeelaInterface encapsule
@@ -37,11 +39,11 @@ Le main thread peut donc "vider stderr" de façon non-bloquante.
 '''
 
 class LeelaInterface(object):
-    def __init__(self, leela_path=leela_binary, stdout_queue=None,
+    def __init__(self, engine_cmd=leelaz_cmd, stdout_queue=None,
             stderr_queue=None):
         print("===Python : LeelaInterface : Starting leela ===")
         self._leela = subprocess.Popen(
-                gnugo,
+                engine_cmd,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 stderr=subprocess.PIPE,

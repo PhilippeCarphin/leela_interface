@@ -4,12 +4,7 @@ from src.leela import LeelaInterface
 
 if __name__ == "__main__":
 
-    opencl = input("use opencl ? [y/n] ")
-    if opencl == 'y':
-        leela_binary += '_opencl'
-
-
-    leels = LeelaInterface('./bin/leela_0110_linux_x64')
+    leels = LeelaInterface()
     while True:
         cmd = input("command for leela > ")
         if cmd == 'quit':

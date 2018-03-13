@@ -22,14 +22,16 @@ Ceci crée un processus qui exécute <commande>.  Les <autres_arguments> permett
 La fonction retourne un opjet qui aura des attributs my_process_object.{stdin, stdout, stderr} qui sont des objets IOTextWrapper qui offrent, entre autres, les méthodes write(bytes) et readline().
 
 
-Cas particulier : leela
-=======================
+Cas particulier : leela-zero
+============================
 
 Dans le cas de mon interaction avec leela
 Quand je crée le process leela, je fais des pipes.
 
+	engine_cmd = ['leelaz', '-g', '-w', './src/leelaz-model-530930-128000.txt']
+
     self._leela_process = subprocess.Popen(
-            [leela_binary , '-g'],
+            engine_cmd,
             stdout=subprocess.PIPE,
             stdin=subprocess.PIPE,
             stderr=subprocess.PIPE,
