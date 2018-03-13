@@ -8,6 +8,8 @@ from .pipelistener import PipeListener
 
 leela_binary = os.path.join(os.getcwd(),'bin', 'leela_0110_linux_x64')
 
+gnugo = ['gnugo', '--mode', 'gtp']
+
 '''
 Interface LeelaInterface:  une instance de LeelaInterface encapsule
 une instance réelle du programme de go Leela avec des pipe Unix pour
@@ -35,31 +37,37 @@ Le main thread peut donc "vider stderr" de façon non-bloquante.
 '''
 
 class LeelaInterface(object):
-    def __init__(self, leela_path=leela_binary):
+    def __init__(self, leela_path=leela_binary, stdout_queue=None,
+            stderr_queue=None):
         print("===Python : LeelaInterface : Starting leela ===")
         self._leela = subprocess.Popen(
-                [leela_path, '-g'],
+                gnugo,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 bufsize=1,
                 universal_newlines=True
             )
-        self.stderr_queue = Queue()
+        self.stdout_queue = stdout_queue if stdout_queue is not None else Queue()
+        self._stdout_listener = PipeListener(
+                input_pipe=self._leela.stdout,
+                output_queue=self.stdout_queue
+            )
+        self._stdout_listener.start()
+
+        self.stderr_queue = stderr_queue if stderr_queue is not None else Queue()
         self._stderr_listener = PipeListener(
                 input_pipe=self._leela.stderr,
                 output_queue=self.stderr_queue
             )
         self._stderr_listener.start()
-        print(self.stderr_queue.get().strip())
-        print(self.stderr_queue.get().strip())
 
     def get_stderr(self):
         return self._stderr_listener.get_content()
     def get_stdout(self):
         stdout = ''
-        stdout += self._leela.stdout.readline()
-        self._leela.stdout.readline()
+        stdout += self.stdout_queue.get()
+        self.stdout_queue.get()
         return stdout
 
     def ask(self, cmd):
