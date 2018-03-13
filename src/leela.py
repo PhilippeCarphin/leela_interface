@@ -74,14 +74,3 @@ class LeelaInterface(object):
 
     def ask(self, cmd):
         self._leela.stdin.write(cmd + '\n')
-
-        answer = self.get_stdout()
-
-        # Sometimes I do showboard and leela outputs two lines faster then it
-        # outputs the board.  So the function ask finishes before anything has
-        # time to make it into the queue.  The output of showboard will be seen
-        # after the next command.  That is why there is a .1 second delay here.
-        time.sleep(0.1)
-        return answer, self.get_stderr()
-
-
