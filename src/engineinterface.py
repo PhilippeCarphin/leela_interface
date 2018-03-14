@@ -60,10 +60,7 @@ class EngineInterface(object):
     def get_stderr(self):
         return self._stderr_listener.get_content()
     def get_stdout(self):
-        stdout = ''
-        stdout += self.stdout_queue.get()
-        self.stdout_queue.get()
-        return stdout
+        return self._stdout_listener.get_content()
 
     def ask(self, cmd):
         self._engine.stdin.write(cmd + '\n')
