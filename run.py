@@ -1,12 +1,16 @@
 #!/usr/local/bin/python3
-from src.leela import LeelaInterface
+from src.engineinterface import EngineInterface
 import time
 import signal
+import os
 
+gnugo_cmd = ['gnugo', '--mode', 'gtp']
+
+leelaz_cmd = ['leelaz', '-g', '-w', './src/leelaz-model-5309030-128000.txt']
 
 if __name__ == "__main__":
 
-    leels = LeelaInterface()
+    leels = EngineInterface(leelaz_cmd)
     def stop():
         leels.quit()
         quit(0)
@@ -14,7 +18,7 @@ if __name__ == "__main__":
 
     time.sleep(.5)
     initial_msg = leels.get_stderr()
-    print(initial_msg)
+    # print(initial_msg)
     while True:
         cmd = input("command for leela > ")
         if cmd == 'quit':
