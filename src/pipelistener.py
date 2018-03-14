@@ -9,9 +9,10 @@ class PipeListener(threading.Thread):
         threading.Thread.__init__(self)
         self.input_pipe = input_pipe
         self.output_queue = output_queue
+        self.done = False
 
     def run(self):
-        while True:
+        while not self.done:
             line = self.input_pipe.readline()
             self.output_queue.put(line)
 
@@ -20,5 +21,8 @@ class PipeListener(threading.Thread):
         while not self.output_queue.empty():
             pipecontent += self.output_queue.get()
         return pipecontent
+
+    def stop(self):
+        self.done = True
 
 

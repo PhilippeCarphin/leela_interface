@@ -74,3 +74,9 @@ class LeelaInterface(object):
 
     def ask(self, cmd):
         self._leela.stdin.write(cmd + '\n')
+
+    def quit(self):
+        self.ask('quit')
+        self._stderr_listener.stop()
+        self._stdout_listener.stop()
+        outs, errs = self._leela.communicate()
