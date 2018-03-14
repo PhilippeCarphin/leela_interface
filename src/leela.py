@@ -80,3 +80,9 @@ class LeelaInterface(object):
         self._stderr_listener.stop()
         self._stdout_listener.stop()
         outs, errs = self._leela.communicate()
+
+    def kill(self):
+        self._leela.kill()
+        self._stderr_listener.stop()
+        self._stdout_listener.stop()
+        outs, errs = self._leela.communicate()
