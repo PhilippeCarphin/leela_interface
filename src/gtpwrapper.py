@@ -34,7 +34,7 @@ Le main thread peut donc "vider stderr" de façon non-bloquante.
 
 class GTPWrapper(object):
     def __init__(self, engine_cmd, stdout_queue=None, stderr_queue=None):
-        print("===Python : EngineInterface : Starting {} ===".format(engine_cmd[0]))
+        print("===Python : GTPWrapper : Starting {} ===".format(engine_cmd[0]))
         self._engine = subprocess.Popen(
                 engine_cmd,
                 stdout=subprocess.PIPE,
