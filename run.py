@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3
-from src.engineinterface import EngineInterface
+from src.gtpwrapper import GTPWrapper
 import time
 import signal
 import os
@@ -10,7 +10,7 @@ leelaz_cmd = ['leelaz', '-g', '-w', './src/leelaz-model-5309030-128000.txt']
 
 if __name__ == "__main__":
 
-    leels = EngineInterface(leelaz_cmd)
+    leels = GTPWrapper(leelaz_cmd)
     def stop():
         leels.quit()
         quit(0)
