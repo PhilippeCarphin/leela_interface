@@ -1,3 +1,11 @@
+Note, this has turned out to be more general than being just an interface to leela.
+
+This is actually a higher level wrapper around a subprocess.  It's a wrapper around
+a process created subprocess.Popen() that provides two queues that are filled in
+asynchronously from the stdout and stderr of the process.
+
+The method names still have leela_this and leela_that and I have to change that.
+
 A propos des subprocess et pipe Unix
 ====================================
 
